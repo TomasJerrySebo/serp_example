@@ -9,12 +9,13 @@
       	},
       	loadTours: function() {
       		request = $.ajax({
-                url: "src/js/tours.json",
+                url: "https://raw.githubusercontent.com/TomasJerrySebo/serp_example/master/src/js/tours.json",
                 type: 'GET',
                 timeout: 15000
             });
             request.done(function (response, textStatus, jqXHR){
-                  console.log(response);
+            	  var result = JSON.parse(response)
+                  console.log(result);
             });
             request.fail(function (jqXHR, textStatus, errorThrown){
                   console.error(
