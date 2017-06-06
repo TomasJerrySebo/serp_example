@@ -1,14 +1,12 @@
- console.log('run');
-
 (function($){
 
     window.TourRadar = {
 
       	init: function () {
-            this.loadTours();
+            this.getTours();
             this.appendEvents();
       	},
-      	loadTours: function() {
+      	getTours: function() {
       		request = $.ajax({
                 url: "https://raw.githubusercontent.com/TomasJerrySebo/serp_example/master/src/js/tours.json",
                 type: 'GET',
@@ -16,7 +14,7 @@
             });
             request.done(function (response, textStatus, jqXHR){
             	  var result = JSON.parse(response)
-                  console.log(result);
+                TourRadar.reloadTours(result);
             });
             request.fail(function (jqXHR, textStatus, errorThrown){
                   console.error(
@@ -25,6 +23,17 @@
                   );
             }); 
       	},
+        reloadTours: function(data) {
+          var wrapper = $('#trip-container');
+          $('.ajax-loader').fadeOut(function(){
+
+          });
+         // wrapper.html('');
+          $.each(data, function(i, tour) { 
+            console.log(tour);
+          });        
+        },
+
         appendEvents: function() { 
           // appending Sort by: to select
           ($(window).width() < 992) ? $('select option').each(function(){ $(this).prepend('Sort by: '); }) : '';

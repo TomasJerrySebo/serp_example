@@ -58,7 +58,12 @@
                 <option value="best-selling">Best Selling</option>
               </select>
     </div>
-      <div class="trip-container">
+    <div class="ajax-loader" style="">
+              <img src="src/img/loader.gif" class="loader" style="width: 60px; display: inline; margin-right: 10px;">
+              <p>Loading Tours</p>
+          </div>
+      <div id="trip-container">
+          
           <content class="trip">
               <div class="box">
                   <div class="product-img">
@@ -99,7 +104,7 @@
                   <tr><td>17 Oct</td><td>10 seasts left</td></tr>
                   <tr><td>21 Oct</td><td class="alert">3 seasts left</td></tr>
                 </table>
-                <input type="button" value="View More" placeholder="View More" onclick="return false;" class="form-control">
+                <a type="button" href="#" onclick="return false;" class="form-control">View More</a>
               </div>
           </content>
                   <content class="trip">
@@ -142,7 +147,7 @@
                   <tr><td>17 Oct</td><td>10 seasts left</td></tr>
                   <tr><td>21 Oct</td><td class="alert">3 seasts left</td></tr>
                 </table>
-                <input type="button" value="View More" placeholder="View More" onclick="return false;" class="form-control">
+                <a type="button" href="#" onclick="return false;" class="form-control">View More</a>
               </div>
           </content>
       </div>

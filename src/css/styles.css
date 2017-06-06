@@ -17,6 +17,13 @@
   opacity: 1;
 }
 
+.ajax-loader { width: 100%; text-align: center; margin: 0 auto; display: block; height: 60px; }
+
+.ajax-loader p{ font-size: 25px; line-height: 25px; vertical-align: middle; color: #999999; text-transform: uppercase; display: inline; font-weight: bold;}
+
+.ajax-loader img{ font-size: 25px; line-height: 25px; vertical-align: middle; color: #999999; text-transform: uppercase; display: inline; }
+
+
 .alert { color: #FF0000 !important;}
 .active { color: #409cd1 !important; font-weight: bold !important }
 body { 
@@ -35,12 +42,18 @@ h3 { font-size: 18px;}
 h4 { font-weight: bold; font-size: 16px; }
 p { font-size: 12px; margin-bottom: 15px;}
 table { font-size: 12px;}
-select,input { cursor: pointer; }
-.trip input.form-control { border-radius: 0; color: #ffffff; background-color: #409cd1; border-color: #409cd1;}
-.trip input.form-control:hover { opacity: 0.6}
+select,input, a { cursor: pointer; }
+.trip a.form-control { border-radius: 0; color: #ffffff; background-color: #409cd1; border-color: #409cd1; text-align: center;}
+.trip a.form-control:hover { opacity: 0.6; text-decoration: none;}
 
 #slider-range .ui-widget-header { background: #409cd1 !important; color: #409cd1 !important; border-color: #409cd1 !important; }
 .ui-slider .ui-slider-range { border: 5px solid !important}
+#ui-datepicker-div { z-index: 200 !important; }
+.ui-state-highlight, .ui-widget-content .ui-state-highlight, .ui-widget-header .ui-state-highlight {
+    border: 1px solid #999999 !important;
+    background: #999999 !important;
+}
+
 #sort-by { height: 60px;}
 
 #sort-by select {
