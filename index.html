@@ -7,13 +7,16 @@
   <meta name="description" content="The HTML5 Herald">
   <meta name="author" content="SitePoint">
   <link rel="stylesheet" href="src/css/bootstrap.min.css">
-  <link rel="stylesheet" href="src/css/styles.css?v=1.0">
+    <link rel="stylesheet" href="src/css/styles.css?v=1.0">
+  <link rel="stylesheet" href="src/css/jquery-ui.min.css?v=1.0">
+
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   <!--[if lt IE 9]>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv.js"></script>
   <![endif]-->
-  <script src="src/js/jquery-latest.min.js"></script>
+  <script src="src/js/jquery-latest.min.js?v=1.0"></script>
+  <script src="src/js/jquery-ui.min.js?v=1.0"></script>
 </head>
 
 <body>
@@ -24,22 +27,26 @@
       <div class="filter-box" id="filter-by-date">
         <h4>Departure date</h4>
         <ul class="list-unstyled">
-          <li>October 2016 <span>(1000)</span></li>
+          <li class="active">October 2016 <span class="active">(1000)</span></li>
           <li>November 2016 <span>(1000)</span></li>
           <li>December 2016 <span>(1000)</span></li>
           <li>January 2017 <span>(1000</span></li>
           <li>February 2017 <span>(1000)</span></li>
         </ul>
-        <input type="text" value="" placeholder="Select Specific Date" class="form-control">
+        <input type="text" id="datepicker" value="" placeholder="Select Specific Date" class="form-control">
       </div>
       <div class="filter-box" id="filter-by-duration">
         <h4>Duration</h4>
-       <slider>0-99</slider>
+        <p>
+          <span id="amount-min"></span>
+          <span id="amount-max"></span>
+        </p>
+        <div id="slider-range"></div>
       </div>
     </div>
     <div class="col-md-9 col-sm-12 col-xs-12">
        <div class="text-right" id="sort-by">
-              <label for="sort-by">Sort by</label> 
+              <label for="sort-by" class="hidden-xs hidden-sm">Sort by</label> 
               <select data-initval="created-descending" class="form-control">
                 <option value="manual">Featured</option>
                 <option value="price-ascending">Price, low to high</option>
@@ -58,7 +65,51 @@
                     <span class="discount">-88%</span>
                     <span class="rating"><img src="src/img/full_star.png"/><img src="src/img/full_star.png"/><img src="src/img/full_star.png"/><img src="src/img/full_star.png"/><img src="src/img/full_star.png"/></span>
                     <span class="reviews">140 reviews</span>
-                    <img src="http://cdn-s3.tourradar.com/tour/645x430/1461_919644.jpg">
+                    <img src="src/img/bg.jpg" class="main">
+                    <img src="src/img/HEART.png" class="wishlist">
+                  </div>
+              </div>
+              <div class="box">
+                  <h1>Desert Evolution - 15 Days happy!</h1>
+                  <p>"The tour is well organised and virtually hassle free. As it is a, here we have more text if need to it to compensate the..."</p>
+                  <table class="table table-condensed no-border">
+                    <tr>
+                      <td>DAYS</td>
+                      <td><span class="trip-duration">25</span> days</td>
+                    </tr>
+                    <tr>
+                      <td>DESTINATIONS</td>
+                      <td><span class="trip-destinations"></span> cities</td>
+                    </tr>
+                    <tr>
+                      <td>STARTS/ENDS</td>
+                      <td><span class="trip-start">London</span>/<span class="trip-end">London</span></td>
+                    </tr>
+                    <tr>
+                      <td>OPERATOR</td>
+                      <td><span class="trip-operator"></span></td>
+                    </tr>
+                  </table>
+              </div>
+              <div class="box text-right">
+                <h4>Total price</h4>
+                <h3>$2180</h3>
+                <img src="src/img/rocket.png" >
+                <table class="table table-condensed no-border">
+                  <tr><td>17 Oct</td><td>10 seasts left</td></tr>
+                  <tr><td>21 Oct</td><td class="alert">3 seasts left</td></tr>
+                </table>
+                <input type="button" value="View More" placeholder="View More" onclick="return false;" class="form-control">
+              </div>
+          </content>
+                  <content class="trip">
+              <div class="box">
+                  <div class="product-img">
+                    <span class="discount">-88%</span>
+                    <span class="rating"><img src="src/img/full_star.png"/><img src="src/img/full_star.png"/><img src="src/img/full_star.png"/><img src="src/img/full_star.png"/><img src="src/img/full_star.png"/></span>
+                    <span class="reviews">140 reviews</span>
+                    <img src="src/img/bg.jpg" class="main">
+                    <img src="src/img/HEART.png" class="wishlist">
                   </div>
               </div>
               <div class="box">
