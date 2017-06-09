@@ -24,7 +24,11 @@
   <div class="row">
     <div class="col-md-3 col-sm-12 col-xs-12 filter-wrapper">
       <h4>Filter by:</h4>
-      <div class="filter-box" id="filter-by-date">
+       <div class="ajax-loader filter-loader" style="">
+              <img src="src/img/loader.gif" class="loader">
+              <p>Loading Filters</p>
+          </div>
+      <div class="filter-box" id="filter-by-date" style="display: none;">
         <h4>Departure date</h4>
         <ul class="list-unstyled">
           <li class="active">October 2016 <span class="active">(1000)</span></li>
@@ -35,7 +39,7 @@
         </ul>
         <input type="text" id="datepicker" value="" placeholder="Select Specific Date" class="form-control">
       </div>
-      <div class="filter-box" id="filter-by-duration">
+      <div class="filter-box" id="filter-by-duration" style="display: none;">
         <h4>Duration</h4>
         <p>
           <span id="amount-min"></span>
@@ -43,113 +47,28 @@
         </p>
         <div id="slider-range"></div>
       </div>
+      <a id="clear-all-filters" type="button" href="#" onclick="return false;" class="filter-clear form-control" style="display: none;">CLEAR ALL</a>
+
     </div>
     <div class="col-md-9 col-sm-12 col-xs-12">
        <div class="text-right" id="sort-by">
               <label for="sort-by" class="hidden-xs hidden-sm">Sort by</label> 
               <select data-initval="created-descending" class="form-control">
-                <option value="manual">Featured</option>
-                <option value="price-ascending">Price, low to high</option>
-                <option value="price-descending">Price, high to low</option>
                 <option value="title-ascending">Alphabetically, A-Z</option>
                 <option value="title-descending">Alphabetically, Z-A</option>
-                <option value="created-ascending">Date, old to new</option>
-                <option value="created-descending">Date, new to old</option>
-                <option value="best-selling">Best Selling</option>
+                <option value="length-ascending">Length, short to long</option>
+                <option value="length-descending">Length, long to short</option>
+                <option value="price-ascending">Price, low to high</option>
+                <option value="price-descending">Price, high to low</option>
+                <option value="date-ascending">Date, old to new</option>
+                <option value="date-descending">Date, new to old</option>
               </select>
     </div>
-    <div class="ajax-loader" style="">
-              <img src="src/img/loader.gif" class="loader" style="width: 60px; display: inline; margin-right: 10px;">
+    <div class="ajax-loader tour-loader" style="">
+              <img src="src/img/loader.gif" class="loader">
               <p>Loading Tours</p>
           </div>
-      <div id="trip-container">
-          
-          <content class="trip">
-              <div class="box">
-                  <div class="product-img">
-                    <span class="discount">-88%</span>
-                    <span class="rating"><img src="src/img/full_star.png"/><img src="src/img/full_star.png"/><img src="src/img/full_star.png"/><img src="src/img/full_star.png"/><img src="src/img/full_star.png"/></span>
-                    <span class="reviews">140 reviews</span>
-                    <img src="src/img/bg.jpg" class="main">
-                    <img src="src/img/HEART.png" class="wishlist">
-                  </div>
-              </div>
-              <div class="box">
-                  <h1>Desert Evolution - 15 Days happy!</h1>
-                  <p>"The tour is well organised and virtually hassle free. As it is a, here we have more text if need to it to compensate the..."</p>
-                  <table class="table table-condensed no-border">
-                    <tr>
-                      <td>DAYS</td>
-                      <td><span class="trip-duration">25</span> days</td>
-                    </tr>
-                    <tr>
-                      <td>DESTINATIONS</td>
-                      <td><span class="trip-destinations"></span> cities</td>
-                    </tr>
-                    <tr>
-                      <td>STARTS/ENDS</td>
-                      <td><span class="trip-start">London</span>/<span class="trip-end">London</span></td>
-                    </tr>
-                    <tr>
-                      <td>OPERATOR</td>
-                      <td><span class="trip-operator"></span></td>
-                    </tr>
-                  </table>
-              </div>
-              <div class="box text-right">
-                <h4>Total price</h4>
-                <h3>$2180</h3>
-                <img src="src/img/rocket.png" >
-                <table class="table table-condensed no-border">
-                  <tr><td>17 Oct</td><td>10 seasts left</td></tr>
-                  <tr><td>21 Oct</td><td class="alert">3 seasts left</td></tr>
-                </table>
-                <a type="button" href="#" onclick="return false;" class="form-control">View More</a>
-              </div>
-          </content>
-                  <content class="trip">
-              <div class="box">
-                  <div class="product-img">
-                    <span class="discount">-88%</span>
-                    <span class="rating"><img src="src/img/full_star.png"/><img src="src/img/full_star.png"/><img src="src/img/full_star.png"/><img src="src/img/full_star.png"/><img src="src/img/full_star.png"/></span>
-                    <span class="reviews">140 reviews</span>
-                    <img src="src/img/bg.jpg" class="main">
-                    <img src="src/img/HEART.png" class="wishlist">
-                  </div>
-              </div>
-              <div class="box">
-                  <h1>Desert Evolution - 15 Days happy!</h1>
-                  <p>"The tour is well organised and virtually hassle free. As it is a, here we have more text if need to it to compensate the..."</p>
-                  <table class="table table-condensed no-border">
-                    <tr>
-                      <td>DAYS</td>
-                      <td><span class="trip-duration">25</span> days</td>
-                    </tr>
-                    <tr>
-                      <td>DESTINATIONS</td>
-                      <td><span class="trip-destinations"></span> cities</td>
-                    </tr>
-                    <tr>
-                      <td>STARTS/ENDS</td>
-                      <td><span class="trip-start">London</span>/<span class="trip-end">London</span></td>
-                    </tr>
-                    <tr>
-                      <td>OPERATOR</td>
-                      <td><span class="trip-operator"></span></td>
-                    </tr>
-                  </table>
-              </div>
-              <div class="box text-right">
-                <h4>Total price</h4>
-                <h3>$2180</h3>
-                <img src="src/img/rocket.png" >
-                <table class="table table-condensed no-border">
-                  <tr><td>17 Oct</td><td>10 seasts left</td></tr>
-                  <tr><td>21 Oct</td><td class="alert">3 seasts left</td></tr>
-                </table>
-                <a type="button" href="#" onclick="return false;" class="form-control">View More</a>
-              </div>
-          </content>
+      <div id="trip-container" style="display: none">
       </div>
     </div>
   </div>
@@ -158,3 +77,5 @@
   <script src="src/js/scripts.js?v=1.0"></script>
 </body>
 </html>
+
+                  <!--<content><h1 id="no-result">NO TRIPS AVAILABLE FOR THE SELECTED CRITERIA</h1></content>-->        
