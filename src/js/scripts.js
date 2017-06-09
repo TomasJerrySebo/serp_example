@@ -1,13 +1,23 @@
 (function($){
+    // GLOBAL VARS
     var tourData = '';
     var tourDataInitial = '';
+    var listDateFilter = false;
+    var dateFilter = false;
+    var lengthFilter = false;
+    var month = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+    var activeDate = '2017-06';
+    
+    // MAIN CLASS
     window.TourRadar = {
+
 
       	init: function () {
             this.getTours();
             this.appendEvents();
 
       	},
+        // AJAX LOAD OF THE TOURS
       	getTours: function() {
           $.support.cors = true;
       		request = $.ajax({
@@ -31,8 +41,9 @@
                   );
             }); 
       	},
-
+        // FILTER BY DATE FROM THE LIST OR FROM THE DATEPICKER
         filterDate: function(date,type) {
+
                   var hitDate = new Date(date);
                   var filteredData = tourData.filter(function (a) {
                             var tour = a.dates;
@@ -50,24 +61,29 @@
                   });
                  if(type !== 'special') {
                       tourData = filteredData;
-                      TourRadar.setDayFilters('reload');
+                      dateFilter = true;
+                      TourRadar.setDayFilters();
 
                  }
                  return filteredData;
 
         },
+         // FILTER BY TOURLENGTH
          filterLength: function(start,end) {
+
+
 
                      var filteredData = tourData.filter(function (a) {
                             var tourLength = a.length;
                             return tourLength >= start && tourLength <= end;
                      });
                     tourData = filteredData;
-                    TourRadar.setDateFilters('reload');
+                    lengthFilter = true;
+                    TourRadar.setDayFilters();
                     return filteredData;
 
         },
-
+        // SORT BY FUNCTION
         sortBy: function(type,init) {
                     switch(type){
                     case 'length-ascending': 
@@ -137,18 +153,7 @@
                     };
                     if(init != 'true') { TourRadar.reloadTours(); }
         },
-
-        sortByName: function(data,start,end) {
-
-                     var filteredData = data.filter(function (a) {
-                            var tourLength = a.length;
-                            return tourLength >= start && tourLength <= end;
-                     });
-
-                    return filteredData;
-
-
-        },
+        // SETTING AND REFRESHING THE 'DURATION' TOUR LENGTH FILTER
 
         setDayFilters: function(init) {
                       
@@ -184,14 +189,17 @@
                         $("#slider-range").on("slidestop", function(event, ui) {
                             endPos = ui.value;
                             if (startPos != endPos) {
+                               activeDate = $('#filter-by-date ul li.active').data('date');
+                               lengthFilter = true;
                                TourRadar.filterLength(ui.values[0],ui.values[ 1 ]);
                             }
                             startPos = endPos;
                         });
                         if(init == 'true') { TourRadar.setDateFilters('true'); }
-                        if(init == 'reload') { TourRadar.reloadTours(); }
+                        else { if($('#datepicker.active').length > 0) { TourRadar.reloadTours(); $('#filter-by-date ul').css('opacity',0.4); } else { TourRadar.setDateFilters() } }
 
         },
+        // SETTING AND REFRESHING THE 'DEPARTURE DATE' TOUR DATE FILTER
         setDateFilters: function(init) {
                       var tourDates = [];
                       $.each(tourData, function(i, tour) {
@@ -208,7 +216,6 @@
                                     
                       var currentMonth = now.getMonth();
                       var currentYear = now.getFullYear();
-                      var month = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
                       var dateArray = [];
                       
 
@@ -232,41 +239,31 @@
                       }
                       $('#filter-by-date ul').html('');
                      $.each(dateArray, function(i, filterDates) {
-                        if(i == 0) {$('#filter-by-date ul').append('<li class="active" data-date="'+filterDates["dateNum"]+'">'+filterDates["date"]+'<span>('+filterDates["ammount"]+')</span></li>'); }
-                        else {$('#filter-by-date ul').append('<li data-date="'+filterDates["dateNum"]+'">'+filterDates["date"]+'<span>('+filterDates["ammount"]+')</span></li>'); }                        
+                        $('#filter-by-date ul').append('<li data-date="'+filterDates["dateNum"]+'">'+filterDates["date"]+'<span>('+filterDates["ammount"]+')</span></li>');                    
                      })
+                     $('#filter-by-date ul li[data-date="'+activeDate+'"]').addClass('active');
 
                       // Show filters
                       $('.filter-loader').fadeOut(function(){
                         $('.filter-box, #clear-all-filters').slideDown();
                       });
                        if(init == 'true') { TourRadar.reloadTours('true'); }
-                       if(init == 'reload') { TourRadar.reloadTours(); }
-
+                       else {
+                        TourRadar.reloadTours();
+                       }
+                        
     
         },
+
+        // APPENDING THE FILTERED AND SORTED TOUR CONTENT TO THE MAIN CONTAINER
         reloadTours: function(init) {
 
-          if(init == 'true') { TourRadar.sortBy('title-ascending','true'); }
+          if(init == 'true') { $('#sort-by select option[value="title-ascending"]').prop('selected',true); TourRadar.sortBy('title-ascending','true'); }
 
           var wrapper = $('#trip-container');
           var hitDate =  $('#filter-by-date .active').data('date')
           var dateLength =hitDate.length;
           hitDate = new Date(hitDate);
-
-
-          
-/*
-          dataObj.price = '';
-          dataObj.discount = '';
-          dataObj.firstDate = '';
-          dataObj.firstSeats = '';
-          dataObj.secondDate = '';
-          dataObj.secondSeats = '';
-*/
-
-          //stuff.push( {'name':$(this).attr('checked')} );
-
 
           wrapper.slideUp(function(){
                         $('.tour-loader').show();
@@ -304,7 +301,6 @@
                                             limitCounter++
                                           }
                                       }
-                //                          console.log(date['start']);
                             });
                           var rating = '<img src="src/img/full_star.png"/><img src="src/img/full_star.png"/><img src="src/img/full_star.png"/><img src="src/img/full_star.png"/><img src="src/img/full_star.png"/>';
 
@@ -315,23 +311,38 @@
                               }
                               var availableClass = '';
                               var availableClassTwo = '';
+
+
                           if(dataObj.detail.length == 1) {
                               if(dataObj.detail[0].available < 3) availableClass = 'alert';
 
                             var dis_one = dataObj.detail[0].discount;
                             var discount = (dis_one.length == 0) ? '' : '<span class="discount">-'+dis_one+'</span>';
                             var discountClass = (dis_one.length == 0) ? '' : 'discount-corner';
-                            wrapper.append('<content class="trip"><div class="box"><div class="product-img '+discountClass+'">'+discount+'<span class="rating">'+rating+'</span><span class="reviews">'+dataObj.reviews+' reviews</span><img src="src/img/bg.jpg" class="main"><img src="src/img/HEART.png" class="wishlist"></div></div><div class="box"><h1>'+dataObj.tourTitle+'</h1><p>"'+dataObj.desc+'"</p><table class="table table-condensed no-border"><tr><td>DAYS</td><td><span class="trip-duration">'+dataObj.tourLength+'</span> days</td></tr><tr><td>DESTINATIONS</td><td><span class="trip-destinations">'+dataObj.destinations+'</span> cities</td></tr><tr><td>STARTS/ENDS</td><td><span class="trip-start">'+dataObj.cityStart+'</span>/<span class="trip-end">'+dataObj.cityEnd+'</span></td></tr><tr><td>OPERATOR</td><td><span class="trip-operator">'+dataObj.operator+'</span></td></tr></table></div><div class="box text-right"><h4>Total price</h4><h3 id="tourPrice">$'+dataObj.detail[0].price+'</h3><img src="src/img/rocket.png" ><table class="table table-condensed no-border" id="tour-date-select"><tr data-price="'+dataObj.detail[0].price+'"><td>'+dataObj.detail[0].date+'</td><td class="'+availableClass+'">'+dataObj.detail[0].available+' seasts left</td></tr></table><a type="button" href="'+dataObj.url+'" class="form-control">View More</a></div></content>');
+                            
+                            var date_one = new Date(dataObj.detail[0].date); 
+                            var date_one_month = month[date_one.getMonth()];
+                            var date_one_day = date_one.getDate();
+                            var date_one_final = date_one_month+'-'+date_one_day;
+                            wrapper.append('<content class="trip"><div class="box"><div class="product-img '+discountClass+'">'+discount+'<span class="rating">'+rating+'</span><span class="reviews">'+dataObj.reviews+' reviews</span><img src="src/img/bg.jpg" class="main"><img src="src/img/HEART.png" class="wishlist"></div></div><div class="box"><h1>'+dataObj.tourTitle+'</h1><p>"'+dataObj.desc+'"</p><table class="table table-condensed no-border"><tr><td>DAYS</td><td><span class="trip-duration">'+dataObj.tourLength+'</span> days</td></tr><tr><td>DESTINATIONS</td><td><span class="trip-destinations">'+dataObj.destinations+'</span> cities</td></tr><tr><td>STARTS/ENDS</td><td><span class="trip-start">'+dataObj.cityStart+'</span>/<span class="trip-end">'+dataObj.cityEnd+'</span></td></tr><tr><td>OPERATOR</td><td><span class="trip-operator">'+dataObj.operator+'</span></td></tr></table></div><div class="box text-right"><h4>Total price</h4><h3 id="tourPrice">$'+dataObj.detail[0].price+'</h3><img src="src/img/rocket.png" ><table class="table table-condensed no-border" id="tour-date-select"><tr data-price="'+dataObj.detail[0].price+'"><td>'+date_one_final+'</td><td class="'+availableClass+'">'+dataObj.detail[0].available+' seasts left</td></tr></table><a type="button" href="'+dataObj.url+'" class="form-control">View More</a></div></content>');
                           }
                           else {
-                             if(dataObj.detail[0].available < 3) availableClass = 'alert';
+                              if(dataObj.detail[0].available < 3) availableClass = 'alert';
                               if(dataObj.detail[1].available < 3) availableClassTwo = 'alert';
 
                               var dis_one = dataObj.detail[0].discount;
                               var dis_two = dataObj.detail[1].discount;
                               var discount = (dis_one.length == 0 && dis_two.length == 0) ? '' : (dis_one.length > 0) ? '<span class="discount">-'+dis_one+'</span>' : '<span class="discount">-'+dis_two+'</span>';
                               var discountClass = (dis_one.length == 0 && dis_two.length == 0) ? '' : 'discount-corner';
-                              wrapper.append('<content class="trip"><div class="box"><div class="product-img '+discountClass+'">'+discount+'<span class="rating">'+rating+'</span><span class="reviews">'+dataObj.reviews+' reviews</span><img src="src/img/bg.jpg" class="main"><img src="src/img/HEART.png" class="wishlist"></div></div><div class="box"><h1>'+dataObj.tourTitle+'</h1><p>"'+dataObj.desc+'"</p><table class="table table-condensed no-border"><tr><td>DAYS</td><td><span class="trip-duration">'+dataObj.tourLength+'</span> days</td></tr><tr><td>DESTINATIONS</td><td><span class="trip-destinations">'+dataObj.destinations+'</span> cities</td></tr><tr><td>STARTS/ENDS</td><td><span class="trip-start">'+dataObj.cityStart+'</span>/<span class="trip-end">'+dataObj.cityEnd+'</span></td></tr><tr><td>OPERATOR</td><td><span class="trip-operator">'+dataObj.operator+'</span></td></tr></table></div><div class="box text-right"><h4>Total price</h4><h3 id="tourPrice">$'+dataObj.detail[0].price+'</h3><img src="src/img/rocket.png" ><table class="table table-condensed no-border" id="tour-date-select"><tr data-price="'+dataObj.detail[0].price+'"><td>'+dataObj.detail[0].date+'</td><td class="'+availableClass+'">'+dataObj.detail[0].available+' seasts left</td></tr><tr data-price="'+dataObj.detail[1].price+'"><td>'+dataObj.detail[1].date+'</td><td class="'+availableClassTwo+'">'+dataObj.detail[1].available+' seasts left</td></tr></table><a type="button" href="'+dataObj.url+'" class="form-control">View More</a></div></content>');
+                              var date_one = new Date(dataObj.detail[0].date); 
+                              var date_one_month = month[date_one.getMonth()];
+                              var date_one_day = date_one.getDate();
+                              var date_one_final = date_one_month+'-'+date_one_day;
+                              var date_two = new Date(dataObj.detail[1].date);
+                              var date_two_month = month[date_one.getMonth()];
+                              var date_two_day = date_one.getDate();
+                              var date_two_final = date_two_month+'-'+date_two_day;
+                              wrapper.append('<content class="trip"><div class="box"><div class="product-img '+discountClass+'">'+discount+'<span class="rating">'+rating+'</span><span class="reviews">'+dataObj.reviews+' reviews</span><img src="src/img/bg.jpg" class="main"><img src="src/img/HEART.png" class="wishlist"></div></div><div class="box"><h1>'+dataObj.tourTitle+'</h1><p>"'+dataObj.desc+'"</p><table class="table table-condensed no-border"><tr><td>DAYS</td><td><span class="trip-duration">'+dataObj.tourLength+'</span> days</td></tr><tr><td>DESTINATIONS</td><td><span class="trip-destinations">'+dataObj.destinations+'</span> cities</td></tr><tr><td>STARTS/ENDS</td><td><span class="trip-start">'+dataObj.cityStart+'</span>/<span class="trip-end">'+dataObj.cityEnd+'</span></td></tr><tr><td>OPERATOR</td><td><span class="trip-operator">'+dataObj.operator+'</span></td></tr></table></div><div class="box text-right"><h4>Total price</h4><h3 id="tourPrice">$'+dataObj.detail[0].price+'</h3><img src="src/img/rocket.png" ><table class="table table-condensed no-border" id="tour-date-select"><tr data-price="'+dataObj.detail[0].price+'"><td>'+date_one_final+'</td><td class="'+availableClass+'">'+dataObj.detail[0].available+' seasts left</td></tr><tr data-price="'+dataObj.detail[1].price+'"><td>'+date_two_final+'</td><td class="'+availableClassTwo+'">'+dataObj.detail[1].available+' seasts left</td></tr></table><a type="button" href="'+dataObj.url+'" class="form-control">View More</a></div></content>');
                           }
                           }); 
                           $('#trip-container content p').each(function(){ 
@@ -348,6 +359,8 @@
  
         },
 
+        // APENDING ALL THE ACTIVE(CLICK,CHANGE,RESIZE) EVENTS TO THE MATCHING CONTAINERS 
+
         appendEvents: function() { 
           // appending Sort by: to select
           ($(window).width() < 992) ? $('select option').each(function(){ $(this).prepend('Sort by: '); }) : '';
@@ -362,27 +375,37 @@
                 var date = this.value;
                 $('#filter-by-date ul li').removeClass('active');
                 $(this).addClass('active').data('date',date);
-                console.log(TourRadar.filterDate(date,'date'));
+                if(!lengthFilter) tourData = tourDataInitial;
+                dateFilter = true;
+                TourRadar.filterDate(date,'date');
               } }).val();
           } );
 
           $(document).on('click', '#filter-by-date ul li', function(e){
             $('#datepicker').val('').removeClass('active');
-            $(this).addClass('active').siblings().removeClass('active');
             var date = $(this).data('date');
-            console.log(TourRadar.filterDate(date,'partial'));
+            tourData = tourDataInitial;
+            activeDate = $(this).data('date');
+            if(!lengthFilter) tourData = tourDataInitial;
+            listDateFilter = true;
+            TourRadar.filterDate(date,'partial');
+                        $('#filter-by-date ul').css('opacity',1);
+
           });
 
            $(document).on('click', '#clear-all-filters', function(e){
             tourData = tourDataInitial;
-            $('.filter-loader').fadeOut(function(){
-                        $('.filter-box, #clear-all-filters').slideDown();
-                      });
-            $('.filter-box').fadeOut(function(){
-                         $('.filter-loader').show();
-                                     TourRadar.setDayFilters('true');
+            activeDate = $('#filter-by-date ul li:first-of-type').data('date');
+            dateFilter = false;
+            lengthFilter = false;
+            listDateFilter = false;
+            $('#filter-by-date ul').css('opacity',1);
 
-              });
+            $('#filter-by-date ul li').removeClass('active');
+            $('#filter-by-date ul li:first-of-type').addClass('active');
+            $('#datepicker').val('').removeClass('active');
+
+            TourRadar.setDayFilters('true');
           });
 
           $(document).on('change', '#sort-by select', function(e){
@@ -391,9 +414,7 @@
           });
           $(document).on('click', '#tour-date-select tr', function(e){
                   var price = $(this).data('price');
-                  console.log($(this).parent().parent().siblings('#tourPrice').html('$'+price));
-
-                           //TourRadar.sortBy($(this).val());
+                  $(this).parent().parent().siblings('#tourPrice').html('$'+price);
 
           });
 
